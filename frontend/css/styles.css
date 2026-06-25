@@ -1,218 +1,474 @@
-/* Reset and base styles */
+/* =================================================================
+   1. VARIABLES (TOKENS DE DISEÑO)
+   =================================================================
+   Definimos colores, sombras, etc. en un solo lugar con "custom properties".
+   Si quieres cambiar el color principal de toda la web, cambias UNA línea aquí
+   (--primary) y se actualiza en todos lados. Esto te da control fácil. */
+:root {
+    /* Colores de marca */
+    --primary: #6366f1;          /* índigo */
+    --primary-dark: #4f46e5;
+    --accent: #a855f7;           /* violeta para los degradados */
+
+    /* Colores de texto y fondo */
+    --bg: #ffffff;
+    --bg-soft: #f8f9ff;          /* fondo suave para secciones alternas */
+    --ink: #0f1729;              /* texto principal (casi negro) */
+    --ink-soft: #5a6478;         /* texto secundario (gris) */
+    --border: #e6e8f0;
+
+    /* Degradado reutilizable (lo usamos en botones, texto, íconos) */
+    --gradient: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+
+    /* Sombras: de sutil a marcada */
+    --shadow-sm: 0 2px 8px rgba(15, 23, 41, 0.06);
+    --shadow-md: 0 12px 30px rgba(15, 23, 41, 0.08);
+    --shadow-lg: 0 24px 60px rgba(99, 102, 241, 0.25);
+
+    /* Radio de bordes redondeados */
+    --radius: 16px;
+
+    /* Curva de animación: arranca rápido y frena suave (se siente "fluido") */
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* =================================================================
+   2. RESET Y BASE
+   ================================================================= */
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+    box-sizing: border-box;   /* el padding no agranda los elementos: más predecible */
+}
+
+html {
+    scroll-behavior: smooth;  /* al hacer click en un ancla (#features) se desplaza suave, sin saltar */
+    scroll-padding-top: 90px; /* deja espacio para que el header fijo no tape el título de destino */
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     line-height: 1.6;
-    color: #333;
+    color: var(--ink);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;  /* texto más nítido en pantallas Mac/retina */
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1140px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 24px;
 }
 
-/* Header */
-header {
-    background: #fff;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    position: fixed;
-    width: 100%;
+h1, h2, h3 {
+    line-height: 1.15;
+    letter-spacing: -0.02em;  /* títulos un poco más compactos = se ven más modernos */
+}
+
+/* Texto con relleno de degradado (lo usamos en una palabra del título del hero).
+   El truco: pintamos el texto con un degradado y luego lo recortamos a la forma de las letras. */
+.gradient-text {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* =================================================================
+   3. BOTONES
+   ================================================================= */
+.btn {
+    display: inline-block;
+    padding: 14px 28px;
+    border-radius: 999px;       /* totalmente redondeado (forma de píldora) */
+    font-weight: 600;
+    font-size: 16px;
+    text-decoration: none;
+    cursor: pointer;
+    /* Animamos varias propiedades a la vez al pasar el mouse */
+    transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+}
+
+.btn-primary {
+    background: var(--gradient);
+    color: #fff;
+    box-shadow: var(--shadow-md);
+}
+.btn-primary:hover {
+    transform: translateY(-3px);   /* "flota" hacia arriba */
+    box-shadow: var(--shadow-lg);  /* y la sombra crece = sensación de elevación */
+}
+
+.btn-ghost {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--border);
+}
+.btn-ghost:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* =================================================================
+   4. HEADER / NAVEGACIÓN
+   ================================================================= */
+.site-header {
+    position: fixed;            /* se queda fijo arriba al hacer scroll */
     top: 0;
+    width: 100%;
     z-index: 1000;
+    background: rgba(255, 255, 255, 0.7);   /* blanco semitransparente */
+    backdrop-filter: blur(12px);            /* desenfoca lo que pasa por detrás = efecto "vidrio" */
+    border-bottom: 1px solid var(--border);
 }
 
-nav {
+.nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 0;
+    padding: 16px 24px;
 }
 
 .logo {
-    font-size: 24px;
-    font-weight: bold;
-    color: #2563eb;
-}
-
-.nav-links a {
-    margin-left: 30px;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--ink);
     text-decoration: none;
-    color: #333;
-    transition: color 0.3s;
+}
+.logo span {
+    color: var(--primary);   /* "Mind" pintado de color de marca */
 }
 
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+.nav-links a {
+    text-decoration: none;
+    color: var(--ink-soft);
+    font-weight: 500;
+    transition: color 0.25s var(--ease);
+}
 .nav-links a:hover {
-    color: #2563eb;
+    color: var(--primary);
 }
 
-/* Hero Section */
+/* El botón dentro del nav sí lleva fondo de color */
+.nav-cta {
+    background: var(--gradient);
+    color: #fff !important;
+    padding: 9px 20px;
+    border-radius: 999px;
+    transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+}
+.nav-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* --- Menú móvil sin JS (truco del checkbox) --- */
+.menu-toggle { display: none; }   /* el checkbox real nunca se ve */
+.menu-icon   { display: none; }   /* el ícono ☰ solo aparece en móvil (más abajo) */
+
+/* Las 3 rayitas del ícono hamburguesa */
+.menu-icon span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--ink);
+    margin: 5px 0;
+    border-radius: 2px;
+    transition: 0.3s var(--ease);
+}
+
+/* =================================================================
+   5. HERO
+   ================================================================= */
 .hero {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 200px 0 150px;
+    position: relative;         /* para posicionar las manchas (.blob) dentro */
+    overflow: hidden;           /* recorta las manchas que se salgan del borde */
+    padding: 200px 0 140px;
     text-align: center;
-    margin-top: 70px;
+    background: var(--bg-soft);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;                 /* el contenido queda por encima de las manchas */
+    max-width: 820px;
+}
+
+/* Etiqueta pequeña arriba del título */
+.badge {
+    display: inline-block;
+    padding: 8px 18px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 28px;
 }
 
 .hero h1 {
-    font-size: 48px;
-    margin-bottom: 20px;
+    /* clamp(mínimo, ideal, máximo): el tamaño se adapta SOLO al ancho de pantalla.
+       En móvil baja a 36px, en desktop sube hasta 64px, sin media queries. */
+    font-size: clamp(36px, 6vw, 64px);
+    font-weight: 800;
+    margin-bottom: 24px;
 }
 
-.hero p {
-    font-size: 20px;
-    margin-bottom: 30px;
-    opacity: 0.9;
+.hero-subtitle {
+    font-size: clamp(17px, 2vw, 20px);
+    color: var(--ink-soft);
+    max-width: 600px;
+    margin: 0 auto 36px;
 }
 
-.cta-button {
+.hero-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;            /* en móvil los botones bajan uno debajo del otro */
+}
+
+/* --- Manchas de luz animadas del fondo --- */
+.blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);         /* difumina la mancha hasta que parece luz de fondo */
+    opacity: 0.5;
+    z-index: 1;
+}
+.blob-1 {
+    width: 400px; height: 400px;
+    background: var(--primary);
+    top: -100px; left: -80px;
+    animation: float 9s ease-in-out infinite;       /* flota lento, en bucle */
+}
+.blob-2 {
+    width: 350px; height: 350px;
+    background: var(--accent);
+    bottom: -120px; right: -60px;
+    animation: float 11s ease-in-out infinite reverse;  /* la otra flota al revés para que no vayan sincronizadas */
+}
+
+/* Animación de flotado: la mancha sube/baja y se mueve un poco de lado */
+@keyframes float {
+    0%, 100% { transform: translate(0, 0); }
+    50%      { transform: translate(30px, -40px); }
+}
+
+/* =================================================================
+   6. SECCIONES: CABECERAS COMUNES
+   ================================================================= */
+.section-head {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 60px;
+}
+.eyebrow {
     display: inline-block;
-    background: white;
-    color: #667eea;
-    padding: 15px 40px;
-    border-radius: 50px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: transform 0.3s, box-shadow 0.3s;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--primary);
+    margin-bottom: 12px;
+}
+.section-head h2 {
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 800;
+}
+.section-head p {
+    margin-top: 16px;
+    color: var(--ink-soft);
+    font-size: 18px;
 }
 
-.cta-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-}
-
-/* Features Section */
+/* =================================================================
+   7. FUNCIONES (TARJETAS)
+   ================================================================= */
 .features {
     padding: 100px 0;
-    background: #f9fafb;
-}
-
-.features h2 {
-    text-align: center;
-    font-size: 36px;
-    margin-bottom: 60px;
 }
 
 .features-grid {
     display: grid;
+    /* auto-fit + minmax = las tarjetas se acomodan solas según el ancho disponible.
+       Pasan de 3 columnas a 2 a 1 sin necesidad de escribir media queries. */
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
+    gap: 24px;
 }
 
 .feature-card {
-    background: white;
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    transition: transform 0.3s;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 36px 32px;
+    transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease), border-color 0.4s var(--ease);
+}
+.feature-card:hover {
+    transform: translateY(-6px);     /* se eleva al pasar el mouse */
+    box-shadow: var(--shadow-md);
+    border-color: transparent;
 }
 
-.feature-card:hover {
-    transform: translateY(-5px);
+/* Cajita con degradado donde vive el ícono */
+.feature-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: var(--gradient);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 22px;
+}
+.feature-icon svg {
+    width: 26px;
+    height: 26px;
 }
 
 .feature-card h3 {
-    font-size: 24px;
-    margin-bottom: 15px;
-    color: #2563eb;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 10px;
 }
-
 .feature-card p {
-    color: #666;
+    color: var(--ink-soft);
+    font-size: 15.5px;
 }
 
-/* Waitlist Section */
+/* =================================================================
+   8. LISTA DE ESPERA
+   ================================================================= */
 .waitlist {
     padding: 100px 0;
-    background: white;
-    text-align: center;
+    background: var(--bg-soft);
 }
-
-.waitlist h2 {
-    font-size: 36px;
-    margin-bottom: 20px;
-}
-
-.waitlist p {
-    font-size: 18px;
-    margin-bottom: 40px;
-    color: #666;
-}
-
-.form-placeholder {
-    max-width: 600px;
+/* Tarjeta blanca que envuelve el formulario de Tally */
+.form-card {
+    max-width: 640px;
     margin: 0 auto;
-    border: 2px dashed #ccc;
-    padding: 20px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    box-shadow: var(--shadow-md);
+}
+.form-card iframe {
     border-radius: 10px;
+    display: block;
 }
 
-.form-note {
-    margin-top: 20px;
-    font-size: 14px;
-    color: #999;
-}
-
-.form-note a {
-    color: #2563eb;
-}
-
-/* Contact Section */
+/* =================================================================
+   9. CONTACTO
+   ================================================================= */
 .contact {
     padding: 100px 0;
-    background: #f9fafb;
     text-align: center;
 }
-
 .contact h2 {
-    font-size: 36px;
-    margin-bottom: 20px;
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 800;
+    margin-bottom: 16px;
 }
-
 .contact p {
+    color: var(--ink-soft);
     font-size: 18px;
-    margin-bottom: 30px;
-    color: #666;
+    margin-bottom: 32px;
 }
 
-.contact-info a {
-    color: #2563eb;
-    text-decoration: none;
-}
-
-/* Footer */
-footer {
-    background: #1f2937;
-    color: white;
+/* =================================================================
+   10. FOOTER
+   ================================================================= */
+.site-footer {
+    background: var(--ink);
+    color: rgba(255, 255, 255, 0.7);
     padding: 40px 0;
     text-align: center;
+    font-size: 15px;
 }
 
-footer p {
-    opacity: 0.8;
+/* =================================================================
+   11. ANIMACIÓN DE ENTRADA AL HACER SCROLL (CSS PURO)
+   =================================================================
+   "Scroll-driven animations": el navegador anima los elementos a medida que
+   entran en pantalla, SIN JavaScript. Antes esto requería la librería
+   IntersectionObserver en JS; hoy se puede solo con CSS en navegadores modernos.
+
+   animation-timeline: view()  -> "anima esto según cuánto se ve el elemento"
+   animation-range          -> en qué tramo de la aparición ocurre la animación */
+@keyframes reveal {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Responsive */
+/* @supports = "aplica esto SOLO si el navegador soporta scroll-driven animations".
+   Así, en navegadores viejos el contenido simplemente se ve normal (no desaparece). */
+@supports (animation-timeline: view()) {
+    .feature-card,
+    .section-head,
+    .form-card {
+        animation: reveal linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 60%;  /* aparece cuando entra en el área visible */
+    }
+}
+
+/* Accesibilidad: si el usuario pidió "reducir movimiento" en su sistema,
+   apagamos las animaciones para no marearlo. Es buena práctica incluirlo. */
+@media (prefers-reduced-motion: reduce) {
+    *, .blob {
+        animation: none !important;
+        scroll-behavior: auto;
+    }
+}
+
+/* =================================================================
+   12. RESPONSIVE (MÓVIL)
+   ================================================================= */
 @media (max-width: 768px) {
-    .hero h1 {
-        font-size: 36px;
-    }
-    
-    .hero p {
-        font-size: 16px;
-    }
-    
+    .hero { padding: 150px 0 100px; }
+
+    /* Mostramos el ícono hamburguesa */
+    .menu-icon { display: block; cursor: pointer; }
+
+    /* Ocultamos el menú por defecto y lo desplegamos como panel debajo del header */
     .nav-links {
-        display: none;
+        position: absolute;
+        top: 100%;            /* justo debajo del header */
+        left: 0;
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+        background: #fff;
+        border-bottom: 1px solid var(--border);
+        padding: 0 24px;
+        /* Truco para animar la apertura: altura 0 + recorte, y luego lo expandimos */
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s var(--ease);
     }
-    
-    .features-grid {
-        grid-template-columns: 1fr;
+    .nav-links a {
+        padding: 16px 0;
+        width: 100%;
     }
+
+    /* CUANDO el checkbox está marcado (~ = "el hermano siguiente"), abrimos el menú.
+       Esta es la línea clave del menú sin JS. */
+    .menu-toggle:checked ~ .nav-links {
+        max-height: 320px;    /* alto suficiente para mostrar los links */
+    }
+
+    /* Animamos las 3 rayitas para formar una "X" cuando el menú está abierto */
+    .menu-toggle:checked ~ .menu-icon span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .menu-toggle:checked ~ .menu-icon span:nth-child(2) { opacity: 0; }
+    .menu-toggle:checked ~ .menu-icon span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 }
