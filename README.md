@@ -2,7 +2,7 @@
 
 ## Overview
 
-PriceMind is a web application that helps businesses optimize their pricing strategies by analyzing competitor pricing data and providing actionable insights. It is currently in development and will be released in phases. If interested in knowing more about the project or contributing, please contact Sebastian Minaya at sebastian.minaya1998@gmail.com, or sign up for the waitlist at https://baratio.com.
+PriceMind is a web application that helps businesses optimize their pricing strategies by analyzing competitor pricing data and providing actionable insights. It is currently in development and will be released in phases. If interested in knowing more about the project or contributing, please contact Sebastian Minaya at sebastian.minaya1998@gmail.com, or sign up for the waitlist at placeholder.github.io.
 
 ## Features
 
